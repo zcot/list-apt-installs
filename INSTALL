@@ -1,0 +1,12 @@
+Download and extract, or use git to put the file tree in some directory.
+
+In terminal, from that directory:
+    cmake .
+    make
+    sudo make install
+and to uninstall:
+    sudo make uninstall
+
+
+EOF
+

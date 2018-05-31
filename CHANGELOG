@@ -1,0 +1,5 @@
+list-apt-installs (0.3) Linux Mint 18.x; urgency=medium
+
+  * New initial release.
+
+-- Scott Caudle <zcotcaudle@gmail.com>  Wed, 30 May 2018 23:59:13 -0400
