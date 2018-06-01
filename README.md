@@ -9,7 +9,7 @@ It works good for use in a backup scheme.
 
 
 ## How can I use it?
-You have to install it. You can use a package manager, or import it as and external package, or build/install it. Then simply run with command:
+You have to install it. You can use a package manager, or import it as an external package, or build/install it. Then simply run with command:
 ```
 list-apt-installs
 ```
@@ -70,6 +70,7 @@ tar -xzvf list-apt-installs.tar.gz
 ```
 
 After you have obtained files then proceed in that directory:
+
 to build it:
 ```
 cmake .
