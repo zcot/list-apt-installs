@@ -37,6 +37,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <argp.h>
+
+const char *argp_program_version = "0.4";
+const char *argp_program_bug_address = "<zcotcaudle@gmail.com>";
+static char doc[] = "list-apt-installs -- make a list of previous apt and apt-get installs that were made.\
+\vDefault output is formatted for use with restore function in Linux Mint Backup tool, \
+or installing with `apt-get dselect-upgrade` method.";
+static struct argp argp = { 0, 0, 0, doc };
+
 
 int parse_line(char* line)
 {
@@ -109,6 +118,9 @@ int main(int argc, char* argv[])
     char name[128];
     memset(name, '\0', sizeof(name));
 
+    //take command line args
+    if(argp_parse (&argp, argc, argv, 0, 0, 0))
+        exit (0);
 
     cmd = malloc(sizeof(prefix) + 128 + 1);
     if(!cmd)

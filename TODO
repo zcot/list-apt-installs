@@ -7,8 +7,8 @@ Here are things that I could see being useful:
 -Ubuntu/Debian packaging
 
 -Add the typical argc/argv scaffolding and cover:
-  1. help
-  2. version
+  1. DONE(0.4): added help
+  2. DONE(0.4): added version
   3. various possible output format options (--noinstall, --comma, --space, --noendline)
   4. accept output path/filename (instead of requiring redirected output)
   5. various display options(write to file and/or use stdout? suppress everything when called inline)
