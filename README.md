@@ -2,10 +2,20 @@
 
 
 ## What does this thing do?
-It makes a list.
+It makes a list of the programs from when you type 'apt install' and 'apt-get install'.
 
 ## Why would I use it?
-It works good for use in a backup scheme.
+It works good for use in a backup scheme. You will have the list of programs that were installed by terminal so that you can restore them easily using, for example, Linux Mint's backup tool restore item.
+
+You can also use the list in a file using the `apt-get dselect-upgrade` method.
+
+The default output format is targeted for either of these methods.
+
+It is also available to conversely format the output as a simple apt install script (you only need `chmod +x <filename>` and to execute the script).
+
+So it can be easy to set up your favorite programs on a fresh install, or restore the programs after returning to a different system restore point.
+
+Or you can share the list or script with a friend, to help them setup a special combination of programs.
 
 
 ## How can I use it?
