@@ -1,3 +1,10 @@
+list-apt-installs (0.5) Linux Mint 18.x; urgency=medium
+
+  * Implement arg --script to output in 'apt install' format.
+  * Implement arg --output file capability, optional from piping output.
+
+-- Scott Caudle <zcotcaudle@gmail.com>  Mon, 18 Jun 2018 14:20:21 -0400
+
 list-apt-installs (0.4) Linux Mint 18.x; urgency=medium
 
   * Add argc/argv parsing. Implement --help and --version.

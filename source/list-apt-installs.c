@@ -39,15 +39,63 @@
 #include <errno.h>
 #include <argp.h>
 
-const char *argp_program_version = "0.4";
+const char *argp_program_version = "0.5";
 const char *argp_program_bug_address = "<zcotcaudle@gmail.com>";
 static char doc[] = "list-apt-installs -- make a list of previous apt and apt-get installs that were made.\
 \vDefault output is formatted for use with restore function in Linux Mint Backup tool, \
 or installing with `apt-get dselect-upgrade` method.";
-static struct argp argp = { 0, 0, 0, doc };
+static char args_doc[] = "[-o|--output[=] </path/and/or/file/name>]";
+
+// argc/argv flags
+static struct argp_option options[] = {
+  {"script",  's', 0,       0, "Output as `apt install` script." },
+  {"output",   'o', "FILE",  0, "Output to FILE instead of standard output" },
+  { 0 }
+};
+
+// flags structure
+struct arguments
+{
+  char* arg1;          // for file output
+  char** strings;      // for file output
+  char* output_file;   // file arg to --output
+  int script_building; // boolean --script
+};
+
+// parse each flag
+static error_t parse_opt(int key, char* arg, struct argp_state* state)
+{
+  struct arguments* arguments = state->input;
+
+  switch (key)
+    {
+    case 's':
+      arguments->script_building = 1;
+      break;
+    case 'o':
+      arguments->output_file = arg;
+      break;
+
+    case ARGP_KEY_ARG:
+      arguments->arg1 = arg;
+      arguments->strings = &state->argv[state->next];
+      state->next = state->argc;
+      break;
+
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  return 0;
+}
+
+// argp parser
+static struct argp argp = {options, parse_opt, args_doc, doc};
+
+char g_ending[12];
+FILE* g_fout = NULL;
 
 
-int parse_line(char* line)
+int parse_line_and_output(char* line)
 {
     const char aptget[] = "Commandline: apt-get install ";
     const char apt[] = "Commandline: /usr/bin/apt ins";
@@ -83,7 +131,7 @@ int parse_line(char* line)
 
         //skip the token if it's a command flag or switch
         if(tok[0] != '-')
-            printf("%s install\n", tok);
+            fprintf(g_fout, "%s %s\n", tok, g_ending);
 
         tok = strtok(NULL, s);
     }
@@ -117,9 +165,15 @@ int main(int argc, char* argv[])
     char buf[4096];
     char name[128];
     memset(name, '\0', sizeof(name));
+    memset(g_ending, '\0', sizeof(g_ending));
 
-    //take command line args
-    if(argp_parse (&argp, argc, argv, 0, 0, 0))
+    struct arguments arguments;
+    // default args
+    arguments.script_building = 0; // not building script
+    arguments.output_file = "-"; // not using file output
+
+    //take args and adjust
+    if(argp_parse(&argp, argc, argv, 0, 0, &arguments))
         exit (0);
 
     cmd = malloc(sizeof(prefix) + 128 + 1);
@@ -132,6 +186,23 @@ int main(int argc, char* argv[])
     
     //start here...
     strcpy(name, "/var/log/apt/history.log");
+
+    //using stdout or file?
+    if(strcmp(arguments.output_file, "-"))
+    {
+        g_fout = fopen(arguments.output_file, "w");
+    }
+    else
+        g_fout = stdout;
+
+    //building output as script or not?
+    if(arguments.script_building)
+    {
+        fprintf(g_fout, "#/bin/bash\napt install \\\n");
+        strcpy(g_ending, " \\");
+    }
+    else
+        strcpy(g_ending, " install");
 
     int n = 1;
     while(file_exists(name))
@@ -149,8 +220,8 @@ int main(int argc, char* argv[])
 
         while(fgets(buf, 4096, in))
         {
-            //parse for our data
-            parse_line(buf);
+            //parse for data and do output
+            parse_line_and_output(buf);
         }
 
         // seek the numbered archives
@@ -158,6 +229,7 @@ int main(int argc, char* argv[])
         n++;
     }
 
+    fclose(g_fout);// closing stdout when file is not used?
     free(cmd);
 
     return 0;
