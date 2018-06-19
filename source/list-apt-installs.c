@@ -199,10 +199,10 @@ int main(int argc, char* argv[])
     if(arguments.script_building)
     {
         fprintf(g_fout, "#/bin/bash\napt install \\\n");
-        strcpy(g_ending, " \\");
+        strcpy(g_ending, "\\");
     }
     else
-        strcpy(g_ending, " install");
+        strcpy(g_ending, "install");
 
     int n = 1;
     while(file_exists(name))
