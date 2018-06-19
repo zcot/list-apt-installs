@@ -97,20 +97,29 @@ FILE* g_fout = NULL;
 
 int parse_line_and_output(char* line)
 {
-    const char aptget[] = "Commandline: apt-get install ";
-    const char apt[] = "Commandline: /usr/bin/apt ins";
+    // line will only be a "Commandline: " type passed to this function
+    //example: "Commandline: apt-get install whatever" start index 13
+    const char aptget[] =  "apt-get install "; //length 16, we get at 29
+    const char aptmint[] = "/usr/bin/apt install "; //length 21, we want 34+
+    const char apt[] =     "apt install "; //length 12, we start at index 25
+    // compare each from    ^----to----^
+    // index               [13] length of 12
     char part[30];
     memset(part, '\0', sizeof(part));
     char buffer[2048];
     memset(buffer, '\0', sizeof(buffer));
 
-    strncpy(part, line, 29);
+    strncpy(part, &line[13], 12);//[13] length 12
 
     //find each relevant offset length and copy good info skipping the first command parts
-    if(strncmp(aptget, part, 29) == 0)
+    if(strncmp(aptget, part, 12) == 0)
         strcpy(buffer, &line[29]);
 
-    if(strncmp(apt, part, 29) == 0)
+    if(strncmp(apt, part, 12) == 0)
+        strcpy(buffer, &line[25]);
+
+    if(strncmp(aptmint, part, 12) == 0) //need to check a little further
+        if(strncmp(" install ", &line[25], 9) == 0)
         strcpy(buffer, &line[34]);
 
     //else buffer stays null string and we fall out below
