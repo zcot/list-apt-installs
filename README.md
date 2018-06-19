@@ -23,11 +23,28 @@ You have to install it. You can use a package manager, or import it as an extern
 ```
 list-apt-installs
 ```
+( There is also a symlink installed called `lai` so either command name is the same. )
+
+Save output to a file:
+```
+lai --output=initial-mint-favorites.list
+```
 
 Or put the list into a file which you will save into your backup scheme for later:
 ```
 list-apt-installs > my-installed-stuff.list
 ```
+
+Or make an apt install script file that can be used as an installer for another machine:
+```
+list-apt-installs --script -o my-stuff.installer
+```
+
+You can see the few simple command options available here:
+```
+lai --help
+```
+
 
 
 ### Package manager installation:
