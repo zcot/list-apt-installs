@@ -106,7 +106,7 @@ int parse_line_and_output(char* line)
     // index               [13] length of 12
     char part[30];
     memset(part, '\0', sizeof(part));
-    char buffer[2048];
+    char buffer[4096];
     memset(buffer, '\0', sizeof(buffer));
 
     strncpy(part, &line[13], 12);//[13] length 12
