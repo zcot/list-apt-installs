@@ -25,24 +25,28 @@ list-apt-installs
 ```
 ( There is also a symlink installed called `lai` so either command name is the same. )
 
-Save output to a file:
+Save output to a file in the same directory:
 ```
 lai --output=initial-mint-favorites.list
 ```
 
 Or put the list into a file which you will save into your backup scheme for later:
 ```
-list-apt-installs > my-installed-stuff.list
+list-apt-installs > ~/backups/my-installed-stuff.list
 ```
 
 Or make an apt install script file that can be used as an installer for another machine:
 ```
-list-apt-installs --script -o my-stuff.installer
+list-apt-installs --script -o /full/existing/absolute-path/my-stuff.installer
 ```
 
 You can see the few simple command options available here:
 ```
 lai --help
+```
+or here:
+```
+man list-apt-installs
 ```
 
 
