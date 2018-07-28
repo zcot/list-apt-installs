@@ -232,6 +232,7 @@ int main(int argc, char* argv[])
             //parse for data and do output
             parse_line_and_output(buf);
         }
+        pclose(in);
 
         // seek the numbered archives
         sprintf(name, "%s%i%s", "/var/log/apt/history.log.", n, ".gz");
