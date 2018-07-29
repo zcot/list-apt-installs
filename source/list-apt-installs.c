@@ -95,6 +95,36 @@ char g_ending[12];
 FILE* g_fout = NULL;
 
 
+// a boolean type of package checking utility
+int package_exists(char* name)
+{
+    FILE* pdpkgquery = fopen(name, "r");
+    char buf[4096];
+    char query[4096];
+    snprintf(query, 4096, "dpkg-query --show --showformat='${db:Status-Status}\n' %s 2>/dev/null", name);
+
+    pdpkgquery = popen(query, "r");
+    if(!pdpkgquery)
+    {
+        fprintf(stderr, "lai-fail: popen: %s\n", strerror(errno));
+        return 0;
+    }
+    if(fgets(buf, 4096, pdpkgquery))
+        //if(strncmp("installed", buf, 9) == 0)
+        // successful output should only be "installed" or "not-installed"
+        // other than erroneous condition piped out the stderr which we dont care
+        if(buf[0] == 'i')
+        {
+            pclose(pdpkgquery);
+            return 1;
+        }
+
+    pclose(pdpkgquery);
+    return 0;
+}
+
+
+
 int parse_line_and_output(char* line)
 {
     // line will only be a "Commandline: " type passed to this function
@@ -140,6 +170,7 @@ int parse_line_and_output(char* line)
 
         //skip the token if it's a command flag or switch
         if(tok[0] != '-')
+            if(package_exists(tok))
             fprintf(g_fout, "%s %s\n", tok, g_ending);
 
         tok = strtok(NULL, s);
