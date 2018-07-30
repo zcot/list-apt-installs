@@ -98,7 +98,7 @@ FILE* g_fout = NULL;
 // a boolean type of package checking utility
 int package_exists(char* name)
 {
-    FILE* pdpkgquery = fopen(name, "r");
+    FILE* pdpkgquery = NULL;
     char buf[4096];
     char query[4096];
     snprintf(query, 4096, "dpkg-query --show --showformat='${db:Status-Status}\n' %s 2>/dev/null", name);
@@ -139,31 +139,28 @@ int parse_line_and_output(char* line)
     char buffer[4096];
     memset(buffer, '\0', sizeof(buffer));
 
-    strncpy(part, &line[13], 12);//[13] length 12
-
-    //copy the package(s) based on which command was used
-    if(strncmp(aptget, part, 12) == 0)
-    {
-        strcpy(buffer, &line[29]);
-    }
-    else if(strncmp(apt, part, 12) == 0)
-    {
-        strcpy(buffer, &line[25]);
-    }
-    else if(strncmp(aptmint, part, 12) == 0) //need to check a little further
-    {
-        if(strncmp(" install ", &line[25], 9) == 0)
-        strcpy(buffer, &line[34]);
-    }
-    else return 0;
-
+    //strncpy(part, &line[13], 12);//[13] length 12
     //break up any multi-package calls...
     // ex. apt install screenfetch lolcat timg conky-manager2
     //and check for and ignore extra command flags (anything started with -)
     const char s[2] = " ";
     char* tok;
 
-    tok = strtok(buffer, s);
+    //copy the package(s) based on which command was used
+    if(strncmp(aptget, line, 12) == 0)
+    {
+        tok = strtok(&line[16], s);
+    }
+    else if(strncmp(apt, line, 12) == 0)
+    {
+        tok = strtok(&line[12], s);
+    }
+    else if(strncmp(aptmint, line, 12) == 0) //need to check a little further
+    {
+        if(strncmp(" install ", &line[12], 9) == 0)
+        tok = strtok(&line[21], s);
+    }
+    else return 0;
 
     while(tok)
     {
@@ -264,7 +261,8 @@ int main(int argc, char* argv[])
         while(fgets(buf, 4096, in))
         {
             //parse for data and do output
-            parse_line_and_output(buf);
+            //send line starting after "Commandline: " part
+            parse_line_and_output(&buf[13]);
         }
         pclose(in);
 
