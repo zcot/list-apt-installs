@@ -141,18 +141,21 @@ int parse_line_and_output(char* line)
 
     strncpy(part, &line[13], 12);//[13] length 12
 
-    //find each relevant offset length and copy good info skipping the first command parts
+    //copy the package(s) based on which command was used
     if(strncmp(aptget, part, 12) == 0)
+    {
         strcpy(buffer, &line[29]);
-
-    if(strncmp(apt, part, 12) == 0)
+    }
+    else if(strncmp(apt, part, 12) == 0)
+    {
         strcpy(buffer, &line[25]);
-
-    if(strncmp(aptmint, part, 12) == 0) //need to check a little further
+    }
+    else if(strncmp(aptmint, part, 12) == 0) //need to check a little further
+    {
         if(strncmp(" install ", &line[25], 9) == 0)
         strcpy(buffer, &line[34]);
-
-    //else buffer stays null string and we fall out below
+    }
+    else return 0;
 
     //break up any multi-package calls...
     // ex. apt install screenfetch lolcat timg conky-manager2
