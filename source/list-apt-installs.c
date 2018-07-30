@@ -139,7 +139,6 @@ int parse_line_and_output(char* line)
     char buffer[4096];
     memset(buffer, '\0', sizeof(buffer));
 
-    //strncpy(part, &line[13], 12);//[13] length 12
     //break up any multi-package calls...
     // ex. apt install screenfetch lolcat timg conky-manager2
     //and check for and ignore extra command flags (anything started with -)
