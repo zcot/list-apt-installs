@@ -101,6 +101,17 @@ int package_exists(char* name)
     FILE* pdpkgquery = NULL;
     char buf[4096];
     char query[4096];
+    char pkgname[255];
+
+    //strip specified version if any was provided. for example: apt install hello=2.10-3build1
+    char* equal = strchr(name, '=');
+    if(equal)
+    {
+        strncpy(pkgname, name, equal-name);
+        pkgname[equal-name] = '\0';
+        snprintf(query, 4096, "dpkg-query --show --showformat='${db:Status-Status}\n' %s 2>/dev/null", pkgname);
+    }
+    else
     snprintf(query, 4096, "dpkg-query --show --showformat='${db:Status-Status}\n' %s 2>/dev/null", name);
 
     pdpkgquery = popen(query, "r");
