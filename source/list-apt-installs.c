@@ -139,16 +139,11 @@ int package_exists(char* name)
 int parse_line_and_output(char* line)
 {
     // line will only be a "Commandline: " type passed to this function
-    //example: "Commandline: apt-get install whatever" start index 13
-    const char aptget[] =  "apt-get install "; //length 16, we get at 29
-    const char aptmint[] = "/usr/bin/apt install "; //length 21, we want 34+
-    const char apt[] =     "apt install "; //length 12, we start at index 25
-    // compare each from    ^----to----^
-    // index               [13] length of 12
-    char part[30];
-    memset(part, '\0', sizeof(part));
-    char buffer[4096];
-    memset(buffer, '\0', sizeof(buffer));
+    // and here 'line' starts after the "Commandline: " part
+    //example: "Commandline: apt-get install whatever"
+    const char aptget[] =  "apt-get "; //length is 8, we start checking at 9(index 8)
+    const char aptmint[] = "/usr/bin/apt install "; //length 21, start at index 21
+    const char apt[] =     "apt install "; //length 12
 
     //break up any multi-package calls...
     // ex. apt install screenfetch lolcat timg conky-manager2
@@ -157,17 +152,19 @@ int parse_line_and_output(char* line)
     char* tok;
 
     //copy the package(s) based on which command was used
-    if(strncmp(aptget, line, 12) == 0)
+    //apt-get can use a flag in front of 'install' and after so check for 'apt-get' then find 'install' anywhere
+    if(strncmp(aptget, line, 8) == 0)
     {
-        tok = strtok(&line[16], s);
+        if(strstr("install", &line[8]))
+        tok = strtok(&line[8], s);
+        else return 0;
     }
     else if(strncmp(apt, line, 12) == 0)
     {
         tok = strtok(&line[12], s);
     }
-    else if(strncmp(aptmint, line, 12) == 0) //need to check a little further
+    else if(strncmp(aptmint, line, 21) == 0)
     {
-        if(strncmp(" install ", &line[12], 9) == 0)
         tok = strtok(&line[21], s);
     }
     else return 0;
