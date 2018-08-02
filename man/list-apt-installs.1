@@ -1,6 +1,6 @@
 .\" Manpage for list-apt-installs.
 .\" Contact zcotcaudle@gmail.com to correct errors or typos.
-.TH man 1 "06 May 2018" "0.5" "list-apt-installs man page"
+.TH man 1 "06 May 2018" "0.6" "list-apt-installs man page"
 .SH NAME
 list-apt-installs \- output list of apt/apt-get USER installed packages from apt log(s).
 .SH SYNOPSIS
@@ -30,7 +30,5 @@ Mandatory or optional arguments to long options are also mandatory or optional
 for any corresponding short options.
 .SH SEE ALSO
 \fBapt-get\fR(8),\fBdselect\fR(1)
-.SH BUGS
-Unintended feature: If you installed a software, then later removed it, this tool will still list the package anyway as it was used with the install command. -so there is not logical interaction from within this tool, it simply lists. It is recommended to check the output and edit it appropriately if needed.
 .SH AUTHOR
 Scott Caudle (zcotcaudle@gmail.com)

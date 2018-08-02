@@ -29,7 +29,7 @@
 *
 *   You can produce a ".list" file by simply piping the output to a file.
 *
-*   If you have later removed any of the installed software, the install is still listed anyway.
+*   See man list-apt-installs or lai --help
 *
 */
 
@@ -39,7 +39,7 @@
 #include <errno.h>
 #include <argp.h>
 
-const char *argp_program_version = "0.5";
+const char *argp_program_version = "0.6";
 const char *argp_program_bug_address = "<zcotcaudle@gmail.com>";
 static char doc[] = "list-apt-installs -- make a list of previous apt and apt-get installs that were made.\
 \vDefault output is formatted for use with restore function in Linux Mint Backup tool, \
@@ -155,8 +155,13 @@ int parse_line_and_output(char* line)
     //apt-get can use a flag in front of 'install' and after so check for 'apt-get' then find 'install' anywhere
     if(strncmp(aptget, line, 8) == 0)
     {
-        if(strstr("install", &line[8]))
-        tok = strtok(&line[8], s);
+        if(strstr(&line[7], " install "))
+        {
+            if(strstr(&line[7], " --force-yes "))//if force-yes then bail out
+                return 0;
+
+            tok = strtok(&line[8], s);
+        }
         else return 0;
     }
     else if(strncmp(apt, line, 12) == 0)

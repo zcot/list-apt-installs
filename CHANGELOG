@@ -1,3 +1,10 @@
+list-apt-installs (0.6) Linux Mint 19; urgency=medium
+
+  * check if package is still installed, will not include removed/purged packages
+  * tweaks and bug fixes for parsing command line flags
+
+-- Scott Caudle <zcotcaudle@gmail.com>  Wed, 1 Aug 2018 22:18:47 -0400
+
 list-apt-installs (0.5) Linux Mint 18.x; urgency=medium
 
   * Implement arg --script to output in 'apt install' format.

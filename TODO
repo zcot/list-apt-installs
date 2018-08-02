@@ -12,8 +12,8 @@ Here are things that I could see being useful:
   3. various possible output format options (--noinstall, --comma, --space, --noendline)
      DONE(0.5): -also added 'apt install' script output
   4. DONE(0.5): accept output path/filename (instead of requiring redirected output)
-  5. various display options(write to file and/or use stdout? suppress everything when called inline)
-  6. maybe some logic against resultant output, to prove they are still installed?(--check?)
+  5. DONE(0.6)various display options(write to file and/or use stdout? suppress everything when called inline)
+  6. DONE(0.6)maybe some logic against resultant output, to prove they are still installed?(--check?)
 
 -Make assurance against injection exploits.
 
