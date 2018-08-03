@@ -151,6 +151,10 @@ int parse_line_and_output(char* line)
     const char s[2] = " ";
     char* tok;
 
+    //truncate newline
+    char* newline = strchr(line, '\n');
+    if(newline) *newline = '\0';
+
     //copy the package(s) based on which command was used
     //apt-get can use a flag in front of 'install' and after so check for 'apt-get' then find 'install' anywhere
     if(strncmp(aptget, line, 8) == 0)
@@ -176,10 +180,6 @@ int parse_line_and_output(char* line)
 
     while(tok)
     {
-        //truncate any newline
-        char* newline = strchr(tok, '\n');
-        if(newline) *newline = '\0';
-
         //skip the token if it's a command flag or switch
         if(tok[0] != '-')
             if(package_exists(tok))
